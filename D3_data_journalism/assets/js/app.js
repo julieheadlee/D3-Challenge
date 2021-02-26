@@ -18,7 +18,6 @@ var svg = d3.select("#scatter")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
 
-  console.log("I'm in the javascript file!");
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
@@ -38,15 +37,16 @@ d3.csv("assets/data/data.csv").then(function(data) {
       d.smokes = +d.smokes;
 
     });
-    console.log("I've loaded the data");
+ 
+ 
     // Step 2: Create scale functions
     // ==============================
     var xLinearScale = d3.scaleLinear()
-      .domain([20, d3.max(data, d => d.poverty)])
+      .domain([8, d3.max(data, d => d.poverty)])
       .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
-      .domain([0, d3.max(data, d => d.healthcare)])
+      .domain([4, d3.max(data, d => d.healthcare)])
       .range([height, 0]);
 
     // Step 3: Create axis functions
@@ -74,6 +74,28 @@ d3.csv("assets/data/data.csv").then(function(data) {
     .attr("r", "15")
     .attr("fill", "green")
     .attr("opacity", ".5");
+    
+
+    // Add the state abbreviations to the circles
+    //circlesGroup.append("text")
+    svg.selectAll("text")
+    //circlesGroup.selectAll("text")
+      .data(data)
+      .enter()
+      .append("text")
+        .attr("x", function(d) {
+        console.log(d.abbr + ": " + xLinearScale(d.poverty));
+        return xLinearScale(d.poverty);
+      })
+      .attr("y", function(d) {
+        return yLinearScale(d.healthcare);
+      })
+      .attr("stroke", "black")
+      .attr("font-family", "serif")
+      .attr("font-size", "12px")
+      .text(function(d) {
+        return d.abbr;
+      });
 
     // Step 6: Initialize tool tip
     // ==============================
@@ -105,12 +127,13 @@ d3.csv("assets/data/data.csv").then(function(data) {
       .attr("x", 0 - (height / 2))
       .attr("dy", "1em")
       .attr("class", "axisText")
-      .text("Percentage Lacking Healthcare");
+      .text("Lack Healthcare (%)");
 
     chartGroup.append("text")
       .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
       .attr("class", "axisText")
-      .text("Percentage in Poverty");
+      .text("Poverty (%)");
+
   }).catch(function(error) {
     console.log(error);
   });
