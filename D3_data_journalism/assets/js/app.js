@@ -77,25 +77,15 @@ d3.csv("assets/data/data.csv").then(function(data) {
     
 
     // Add the state abbreviations to the circles
-    //circlesGroup.append("text")
-    svg.selectAll("text")
-    //circlesGroup.selectAll("text")
+    chartGroup.append("g").selectAll(".stateText")
       .data(data)
       .enter()
       .append("text")
-        .attr("x", function(d) {
-        console.log(d.abbr + ": " + xLinearScale(d.poverty));
-        return xLinearScale(d.poverty);
-      })
-      .attr("y", function(d) {
-        return yLinearScale(d.healthcare);
-      })
-      .attr("stroke", "black")
-      .attr("font-family", "serif")
-      .attr("font-size", "12px")
-      .text(function(d) {
-        return d.abbr;
-      });
+      .classed("stateText", true)
+      //.text(function(data) {return data.abbr})
+      .text(data => (data.abbr))
+      .attr("x", data => xLinearScale(data.poverty))
+      .attr("y", data => yLinearScale(data.healthcare));
 
     // Step 6: Initialize tool tip
     // ==============================
@@ -112,7 +102,7 @@ d3.csv("assets/data/data.csv").then(function(data) {
 
     // Step 8: Create event listeners to display and hide the tooltip
     // ==============================
-    circlesGroup.on("click", function(data) {
+    circlesGroup.on("mouseover", function(data) {
       toolTip.show(data, this);
     })
       // onmouseout event
