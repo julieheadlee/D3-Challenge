@@ -65,15 +65,13 @@ d3.csv("assets/data/data.csv").then(function(data) {
 
     // Step 5: Create Circles
     // ==============================
-    var circlesGroup = chartGroup.selectAll("circle")
+    var circlesGroup = chartGroup.selectAll("stateCircle")
     .data(data)
     .enter()
     .append("circle")
     .attr("cx", d => xLinearScale(d.poverty))
     .attr("cy", d => yLinearScale(d.healthcare))
-    .attr("r", "15")
-    .attr("fill", "green")
-    .attr("opacity", ".5");
+    .attr("r", "15");
     
 
     // Add the state abbreviations to the circles
@@ -82,10 +80,9 @@ d3.csv("assets/data/data.csv").then(function(data) {
       .enter()
       .append("text")
       .classed("stateText", true)
-      //.text(function(data) {return data.abbr})
       .text(data => (data.abbr))
       .attr("x", data => xLinearScale(data.poverty))
-      .attr("y", data => yLinearScale(data.healthcare));
+      .attr("y", data => yLinearScale(data.healthcare - .3));
 
     // Step 6: Initialize tool tip
     // ==============================
